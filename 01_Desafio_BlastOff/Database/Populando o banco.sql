@@ -19,8 +19,11 @@ VALUES ('123456789-74', 'João Vitor Alves Lima', '68412-112', 'joaovitor@gmail.
 
 EXEC spClientLevel '123456789-74'
 
-EXEC spPurchase '','123456789-74','2','','4',''
+EXEC spPurchase '1','123456789-74','2', 'Bank slip','1'
 
 INSERT INTO
     [Mail]
 VALUES (5, 42.90)
+
+ALTER TABLE [Purchase]
+    ALTER COLUMN[totalValue] MONEY NULL
