@@ -1,5 +1,5 @@
 ALTER TABLE [Product]
-    DROP CONSTRAINT [CK_type]
+    ADD CONSTRAINT [CK_type] CHECK ([type] IN('smartphones', 'peripherals', 'electronics in general', 'hardware', 'notebook'))
 
 CREATE TABLE [Product] 
 (
@@ -10,7 +10,7 @@ CREATE TABLE [Product]
     [price] MONEY NOT NULL,
     [quantity] INT NOT NULL,
     CONSTRAINT [PK_Product] PRIMARY KEY ([id]),
-    CONSTRAINT [CK_type] CHECK ([type] IN('Smartphones', 'Peripherals', 'Electronics in general', 'Hardware'))
+    CONSTRAINT [CK_type] CHECK ([type] IN('smartphones', 'peripherals', 'electronics in general', 'hardware', 'notebook'))
 );
 GO
 
@@ -32,7 +32,8 @@ CREATE TABLE [ProductHasStore]
     [ProductId] INT NOT NULL,
     [StoreId] INT NOT NULL,
     CONSTRAINT [FK_ProductHasStore_Product_ProductId] FOREIGN KEY ([ProductId]) REFERENCES [Product] ([id]) ON DELETE NO ACTION,
-    CONSTRAINT [FK_ProductHasStore_Store_StoreId] FOREIGN KEY ([StoreId]) REFERENCES [Store] ([id]) ON DELETE NO ACTION
+    CONSTRAINT [FK_ProductHasStore_Store_StoreId] FOREIGN KEY ([StoreId]) REFERENCES [Store] ([id]) ON DELETE NO ACTION,
+    CONSTRAINT [PK_ProductHasStore] PRIMARY KEY ([ProductId], [StoreId])
 );
 GO
 
@@ -67,7 +68,6 @@ GO
 -- -----------------------------------------------------
 -- Table Purchase
 -- -----------------------------------------------------
-    
 CREATE TABLE [Purchase]
 (
     [ProductId] INT NOT NULL,
@@ -75,13 +75,14 @@ CREATE TABLE [Purchase]
     [MailCode] INT NOT NULL,
     [totalValue] MONEY NOT NULL,
     [payment_type] VARCHAR(20) NOT NULL,
-    [tracking_code] UNIQUEIDENTIFIER NOT NULL,
+    [tracking_code] VARCHAR(50) NOT NULL,
     [quantity_purchased] INT NOT NULL,
 
     CONSTRAINT [FK_Purchase_Product_ProductId] FOREIGN KEY ([ProductId]) REFERENCES [Product] ([id]),
     CONSTRAINT [FK_Purchase_Client_ClientCPF] FOREIGN KEY ([ClientCPF]) REFERENCES [Client] ([cpf]),
     CONSTRAINT [FK_Purchase_Mail_MailCode] FOREIGN KEY ([MailCode]) REFERENCES [Mail] ([code]),
-    CONSTRAINT [CK_payment] CHECK ([payment_type] IN ('bank slip', 'credit card', 'pix'))
+    CONSTRAINT [CK_payment] CHECK ([payment_type] IN ('bank slip', 'credit card', 'pix')),
+    CONSTRAINT [PK_Purchase] PRIMARY KEY ([ProductId], [ClientCPF])
 );
 GO
 

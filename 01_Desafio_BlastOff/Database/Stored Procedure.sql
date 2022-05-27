@@ -9,12 +9,15 @@ CREATE OR ALTER PROCEDURE spPurchase(
         DECLARE @testCpf VARCHAR(20),
                 @testProductId INT,
                 @testQuantityPurchased INT,
-                @testStock INT,
+                @testStock INT, 
                 @testCode INT,
+                @mailPrice MONEY,
                 @testTrackingCode UNIQUEIDENTIFIER,
+                @totalValue MONEY,
+                @productPrice MONEY,
                 @test BIT
 
-        SELECT @testCode = [code] FROM [Mail]
+        SELECT @testCode = [code], @mailPrice = [price] FROM [Mail]
         WHERE [code] = @code;
 
         SELECT @testStock = [quantity] FROM [Product]
@@ -25,6 +28,11 @@ CREATE OR ALTER PROCEDURE spPurchase(
         
         SELECT @testProductId = [id] FROM [Product]
         WHERE [id] = @productId
+
+        SELECT @productPrice = [price] FROM [Product]
+        WHERE [id] = @productId                
+
+        SET @totalValue = (@quantityPurchased * @productPrice) + @mailPrice
         SET @test = 1
         SET @testTrackingCode = NEWID()
 
@@ -41,8 +49,12 @@ CREATE OR ALTER PROCEDURE spPurchase(
             PRINT 'Purchase not made, insufficient quantity'
         END
         IF @test = 1 BEGIN
-            INSERT INTO [Purchase]([ProductId], [ClientCPF], [MailCode], [totalValue], [payment_type], [tracking_code], [quantity_purchased]) VALUES(@productId, @cpf, @code, 500, LOWER(@paymentType), @testTrackingCode, @quantityPurchased); 
+            INSERT INTO [Purchase]([ProductId], [ClientCPF], [MailCode], [totalValue], [payment_type], [tracking_code], [quantity_purchased]) VALUES(@productId, @cpf, @code, @totalValue, LOWER(@paymentType), @testTrackingCode, @quantityPurchased); 
         END
+
+        UPDATE [Product]
+        SET [quantity] = [quantity] - @quantityPurchased
+        WHERE [id] = @productId
 
     COMMIT 
 GO

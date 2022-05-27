@@ -1,7 +1,6 @@
-CREATE OR ALTER PROCEDURE [spClientLevel](
-   @p_clientCPF VARCHAR(20)
-) AS
-    BEGIN TRANSACTION
+CREATE OR ALTER FUNCTION dbo.fcClientLevel(@p_clientCPF VARCHAR(20)) 
+RETURNS VARCHAR (25)
+    BEGIN
 
         DECLARE @v_level VARCHAR(25),
                 @v_quantity INT,
@@ -32,15 +31,5 @@ CREATE OR ALTER PROCEDURE [spClientLevel](
         END
         END
 
-        IF @test IS NULL BEGIN
-            PRINT 'This client not exist'
-        END
-
-        UPDATE
-        [Client]
-        SET
-            [level] = @v_level
-        WHERE
-            [cpf] = @p_clientCPF
-    COMMIT
     RETURN @v_level
+    END
