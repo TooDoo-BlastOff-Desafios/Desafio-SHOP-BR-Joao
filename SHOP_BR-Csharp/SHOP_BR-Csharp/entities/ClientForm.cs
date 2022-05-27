@@ -51,7 +51,7 @@ namespace SHOP_BR_Csharp.entities
                     command.Parameters.AddWithValue("@email", string.Format(txtEmail.Text));
                     command.Parameters.AddWithValue("@password", string.Format(txtPassword.Text));
                     command.Parameters.AddWithValue("@level", txtLevel.Text);
-                    command.Parameters.AddWithValue("@phone", txtLevel.Text);
+                    command.Parameters.AddWithValue("@phone", txtPhone.Text);
 
                     connection.Open();
                     command.ExecuteNonQuery();
@@ -164,7 +164,7 @@ namespace SHOP_BR_Csharp.entities
                 command.Parameters.AddWithValue("@email", string.Format(txtEmail.Text));
                 command.Parameters.AddWithValue("@password", txtPassword.Text);
                 command.Parameters.AddWithValue("@level", txtLevel.Text);
-                command.Parameters.AddWithValue("@phone", txtLevel.Text);
+                command.Parameters.AddWithValue("@phone", txtPhone.Text);
 
                 connection.Open();
                 command.ExecuteNonQuery();

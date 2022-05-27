@@ -15,13 +15,6 @@ namespace SHOP_BR_Csharp
 {
     public partial class Form1 : Form
     {
-        SqlConnection connection;
-        SqlCommand command;
-        SqlDataAdapter adapter;
-        SqlDataReader reader;
-
-        string strSQL;
-
         public Form1([Optional]EventArgs e)
         {
             InitializeComponent();
